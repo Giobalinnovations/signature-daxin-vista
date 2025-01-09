@@ -33,7 +33,7 @@ export default function Footer() {
       </div>
 
       {/* Main Footer */}
-      <footer className="bg-secondary/20 border-t">
+      <footer className=" border-t">
         <div className="container px-4 md:px-6 py-6">
           <motion.div
             initial="hidden"

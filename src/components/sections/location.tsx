@@ -33,7 +33,7 @@ const Location = () => {
         >
           <CloudinaryImage
             src="mobile-Map_psynz8"
-            alt="Signature Global Location Map"
+            alt="Signature Daxin Vista Location Map"
             fill
             className="object-contain"
             sizes="(max-width: 768px) 100vw, 90vw"

@@ -78,7 +78,7 @@ export default function FloorPlansGallery() {
 
   return (
     <Section id="floor-plans" variant="default">
-      <div className="space-y-10">
+      <div className="space-y-6">
         <SectionHeading
           title="Floor Plans"
           description="Explore our thoughtfully designed retail spaces across different blocks and floors."
@@ -114,7 +114,7 @@ export default function FloorPlansGallery() {
           variants={containerVariants}
           initial="hidden"
           animate="show"
-          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
+          className="grid grid-cols-1 gap-6 max-w-5xl mx-auto"
         >
           <AnimatePresence mode="popLayout">
             {filteredItems.map(item => (
@@ -128,22 +128,17 @@ export default function FloorPlansGallery() {
                 className="group flex flex-col bg-white rounded-2xl overflow-hidden"
               >
                 {/* Image Container */}
-                <div className="aspect-[16/10] relative">
+                <div className="aspect-[16/9] relative h-[250px] md:h-[400px] flex items-center justify-center">
                   <CloudinaryImage
                     src={item.image}
                     alt={item.title}
                     fill
-                    className="object-contain p-4"
+                    className="object-contain"
                     sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                   />
                 </div>
 
                 {/* Title */}
-                <div className="p-4 text-center border-t bg-muted/30">
-                  <h3 className="text-base font-medium text-foreground">
-                    {item.title}
-                  </h3>
-                </div>
               </motion.div>
             ))}
           </AnimatePresence>

@@ -4,8 +4,8 @@ import Header from '@/components/layout/header';
 import Footer from '@/components/layout/footer';
 
 export const metadata: Metadata = {
-  title: 'Signature Global',
-  description: 'Signature Global',
+  title: 'Signature Daxin Vista',
+  description: 'Signature Daxin Vista',
 };
 
 export default function RootLayout({

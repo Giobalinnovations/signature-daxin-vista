@@ -54,13 +54,14 @@ export default function Header() {
     <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-black/95 backdrop-blur supports-[backdrop-filter]:bg-black/80">
       <div className="container flex h-16 items-center justify-between">
         <Link href="/" className="font-bold text-xl">
-          <Image
+          {/* <Image
             src="/sg-logo.webp"
             alt="IRIS BROADWAY"
             width={140}
             height={140}
             // className="w-full h-full"
-          />
+          /> */}
+          Signature Daxin Vista
         </Link>
 
         {/* Desktop Navigation */}
