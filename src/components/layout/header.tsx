@@ -16,7 +16,7 @@ import {
   SheetTrigger,
 } from '@/components/ui/sheet';
 import { Button } from '@/components/ui/button';
-import { Menu, Phone } from 'lucide-react';
+import { Menu } from 'lucide-react';
 import Link from 'next/link';
 import Image from 'next/image';
 
@@ -51,28 +51,26 @@ export default function Header() {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-black/95 backdrop-blur supports-[backdrop-filter]:bg-black/80">
+    <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-white backdrop-blur supports-[backdrop-filter]:bg-white/95">
       <div className="container flex h-16 items-center justify-between">
-        <Link href="/" className="font-bold text-xl text-white">
-          {/* <Image
-            src="/sg-logo.webp"
-            alt="IRIS BROADWAY"
+        <Link href="/" className="font-bold text-xl text-black">
+          <Image
+            src="/Logo.svg"
+            alt="Signature Daxin Vista"
             width={140}
             height={140}
-            // className="w-full h-full"
-          /> */}
-          Signature Daxin Vista
+          />
         </Link>
 
         {/* Desktop Navigation */}
         <div className="hidden md:flex md:items-center md:space-x-4">
-          <NavigationMenu className="text-white">
+          <NavigationMenu className="text-black">
             <NavigationMenuList>
               {navigationItems.map(item => (
                 <NavigationMenuItem key={item.title}>
                   {item.items ? (
                     <>
-                      <NavigationMenuTrigger className="text-white">
+                      <NavigationMenuTrigger className="text-black">
                         {item.title}
                       </NavigationMenuTrigger>
                       <NavigationMenuContent>
@@ -101,7 +99,7 @@ export default function Header() {
                     <NavigationMenuLink asChild>
                       <a
                         href={item.href}
-                        className="group inline-flex h-10 w-max items-center justify-center rounded-md bg-transparent px-4 py-2 text-sm font-medium transition-colors hover:bg-white/10 hover:text-white focus:bg-accent focus:text-accent-foreground focus:outline-none disabled:pointer-events-none disabled:opacity-50 text-white"
+                        className="group inline-flex h-10 w-max items-center justify-center rounded-md bg-transparent px-4 py-2 text-sm font-medium transition-colors hover:bg-black/10 hover:text-black focus:bg-accent focus:text-accent-foreground focus:outline-none disabled:pointer-events-none disabled:opacity-50 text-black"
                       >
                         {item.title}
                       </a>
@@ -111,18 +109,6 @@ export default function Header() {
               ))}
             </NavigationMenuList>
           </NavigationMenu>
-
-          <Button
-            variant="outline"
-            size="sm"
-            className="hidden md:flex bg-white/10 border-white/20 text-white hover:text-white hover:bg-white/10"
-            asChild
-          >
-            <Link href="#hero">
-              <Phone className="mr-2 h-4 w-4" />
-              Contact Us
-            </Link>
-          </Button>
         </div>
 
         {/* Mobile Navigation */}
@@ -131,19 +117,19 @@ export default function Header() {
             <Button
               variant="ghost"
               size="icon"
-              className="text-white hover:bg-white/10"
+              className="text-black hover:bg-black/10"
             >
               <Menu className="h-6 w-6" />
             </Button>
           </SheetTrigger>
           <SheetContent
             side="right"
-            className="w-[300px] sm:w-[400px] bg-black/95 border-border/40"
+            className="w-[300px] sm:w-[400px] bg-white border-border/40"
           >
-            <SheetTitle className="text-white">
+            <SheetTitle className="text-black">
               <Image
                 src="/Logo.svg"
-                alt="IRIS BROADWAY"
+                alt="Signature Daxin Vista"
                 width={150}
                 height={150}
                 className="mb-8"
@@ -154,7 +140,7 @@ export default function Header() {
                 <div key={item.title}>
                   {item.items ? (
                     <div className="space-y-4">
-                      <h4 className="font-medium text-white text-lg">
+                      <h4 className="font-medium text-black text-lg">
                         {item.title}
                       </h4>
                       <div className="pl-4 space-y-4">
@@ -162,7 +148,7 @@ export default function Header() {
                           <a
                             key={subItem.title}
                             href={subItem.href}
-                            className="block text-base text-white/70 hover:text-white transition-colors"
+                            className="block text-base text-black/70 hover:text-black transition-colors"
                             onClick={() => setIsOpen(false)}
                           >
                             {subItem.title}
@@ -173,7 +159,7 @@ export default function Header() {
                   ) : (
                     <a
                       href={item.href}
-                      className="block text-lg text-white hover:text-white/80 transition-colors"
+                      className="block text-lg text-black hover:text-black/80 transition-colors"
                       onClick={() => setIsOpen(false)}
                     >
                       {item.title}
@@ -181,14 +167,6 @@ export default function Header() {
                   )}
                 </div>
               ))}
-              <Button
-                className="w-full mt-8 text-white hover:text-white bg-white/10 hover:bg-white/10 border-white/20"
-                variant="outline"
-                size="lg"
-              >
-                <Phone className="mr-2 h-5 w-5" />
-                Contact Us
-              </Button>
             </nav>
           </SheetContent>
         </Sheet>

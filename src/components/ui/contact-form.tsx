@@ -138,10 +138,7 @@ export function ContactForm() {
               <FormItem>
                 <FormLabel className="truncate">Message</FormLabel>
                 <FormControl>
-                  <Textarea
-                    placeholder="Tell us about your project..."
-                    {...field}
-                  />
+                  <Textarea placeholder="Tell us about your query" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
