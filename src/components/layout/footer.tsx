@@ -24,7 +24,7 @@ export default function Footer() {
       {/* Sticky Mobile Consultation Button */}
       <div className="fixed bottom-0 left-0 right-0 p-4 bg-background/80 backdrop-blur-lg border-t md:hidden z-50">
         <Link
-          href="#hero"
+          href="#contact-form"
           className="flex items-center justify-center gap-2 w-full bg-primary text-primary-foreground hover:bg-primary/90 h-12 rounded-full font-medium shadow-lg transition-all active:scale-95"
         >
           <Phone className="w-4 h-4" />
