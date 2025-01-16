@@ -10,9 +10,13 @@ const formSchema = z.object({
   phone: z.string().regex(/^\d{10}$/, {
     message: 'Please enter a valid 10-digit phone number.',
   }),
-  message: z.string().min(10, {
-    message: 'Message must be at least 10 characters.',
-  }),
+  buyingTimeline: z
+    .string({
+      required_error: "Please select when you're planning to buy.",
+    })
+    .min(1, {
+      message: "Please select when you're planning to buy.",
+    }),
 });
 
 type Result<T> = { success: true; data: T } | { success: false; error: string };
@@ -21,10 +25,10 @@ async function sendEmail(
   data: z.infer<typeof formSchema>
 ): Promise<Result<void>> {
   if (
+    !process.env.HOSTINGER_EMAIL ||
+    !process.env.HOSTINGER_PASSWORD ||
     !process.env.SMTP_HOST ||
-    !process.env.SMTP_PORT ||
-    !process.env.SMTP_USER ||
-    !process.env.SMTP_PASS
+    !process.env.SMTP_PORT
   ) {
     return {
       success: false,
@@ -35,15 +39,19 @@ async function sendEmail(
   const transporter = nodemailer.createTransport({
     host: process.env.SMTP_HOST,
     port: parseInt(process.env.SMTP_PORT || '587'),
+    secure: false,
     auth: {
-      user: process.env.SMTP_USER,
-      pass: process.env.SMTP_PASS,
+      user: process.env.HOSTINGER_EMAIL,
+      pass: process.env.HOSTINGER_PASSWORD,
     },
+    tls: { ciphers: 'TLSv1.2' },
+    requireTLS: true,
+    debug: true,
   });
 
   const mailOptions = {
-    from: process.env.SMTP_USER,
-    to: process.env.SMTP_USER,
+    from: process.env.HOSTINGER_EMAIL,
+    to: process.env.HOSTINGER_EMAIL,
     subject: 'New Contact Form Submission',
     text: `
       New contact form submission:
@@ -51,7 +59,7 @@ async function sendEmail(
       Name: ${data.name}
       Email: ${data.email}
       Telephone: ${data.phone}
-      Message: ${data.message}
+      Buying Timeline: ${data.buyingTimeline.replace(/_/g, ' ')}
     `,
   };
 
