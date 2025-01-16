@@ -2,7 +2,6 @@
 
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
 import { Loader2 } from 'lucide-react';
 import { motion } from 'framer-motion';
 
@@ -22,6 +21,13 @@ import {
   FormControl,
   FormMessage,
 } from '@/components/ui/form';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 
 const formSchema = z.object({
   name: z.string().min(2, { message: 'Name must be at least 2 characters.' }),
@@ -29,9 +35,13 @@ const formSchema = z.object({
   phone: z.string().regex(/^\d{10}$/, {
     message: 'Please enter a valid 10-digit phone number.',
   }),
-  message: z.string().min(10, {
-    message: 'Message must be at least 10 characters.',
-  }),
+  buyingTimeline: z
+    .string({
+      required_error: "Please select when you're planning to buy.",
+    })
+    .min(1, {
+      message: "Please select when you're planning to buy.",
+    }),
 });
 
 export function ContactForm() {
@@ -71,7 +81,7 @@ export function ContactForm() {
       name: '',
       email: '',
       phone: '',
-      message: '',
+      buyingTimeline: '',
     },
   });
 
@@ -131,19 +141,25 @@ export function ContactForm() {
           />
         </div>
         <div className="space-y-2">
-          <FormField
-            control={form.control}
-            name="message"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel className="truncate">Message</FormLabel>
-                <FormControl>
-                  <Textarea placeholder="Tell us about your query" {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+          <Select
+            onValueChange={value => form.setValue('buyingTimeline', value)}
+            defaultValue={form.getValues('buyingTimeline')}
+          >
+            <SelectTrigger className="w-full">
+              <SelectValue placeholder="When are you planning to buy?" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="within_3_months">Within 3 months</SelectItem>
+              <SelectItem value="within_6_months">Within 6 months</SelectItem>
+              <SelectItem value="within_1_year">Within 1 year</SelectItem>
+              <SelectItem value="after_1_year">After 1 year</SelectItem>
+            </SelectContent>
+          </Select>
+          {form.formState.errors.buyingTimeline && (
+            <p className="text-sm text-red-500">
+              {form.formState.errors.buyingTimeline.message}
+            </p>
+          )}
         </div>
         <Button
           type="submit"
