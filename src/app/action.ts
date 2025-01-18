@@ -30,93 +30,83 @@ async function sendEmail(
     !process.env.SMTP_HOST ||
     !process.env.SMTP_PORT
   ) {
+    console.error('Missing email configuration:', {
+      email: !!process.env.HOSTINGER_EMAIL,
+      password: !!process.env.HOSTINGER_PASSWORD,
+      host: !!process.env.SMTP_HOST,
+      port: !!process.env.SMTP_PORT,
+    });
     return {
       success: false,
       error: 'Email configuration is missing',
     };
   }
 
-  const transporter = nodemailer.createTransport({
-    host: process.env.SMTP_HOST,
-    port: parseInt(process.env.SMTP_PORT || '587'),
-    secure: false,
-    auth: {
-      user: process.env.HOSTINGER_EMAIL,
-      pass: process.env.HOSTINGER_PASSWORD,
-    },
-    tls: { ciphers: 'TLSv1.2' },
-    requireTLS: true,
-    debug: true,
-  });
-
-  const mailOptions = {
-    from: process.env.HOSTINGER_EMAIL,
-    to: process.env.HOSTINGER_EMAIL,
-    subject: 'New Contact Form Submission',
-    text: `
-      New contact form submission:
-
-      Name: ${data.name}
-      Email: ${data.email}
-      Telephone: ${data.phone}
-      Buying Timeline: ${data.buyingTimeline.replace(/_/g, ' ')}
-    `,
-  };
-
-  const result = await transporter.sendMail(mailOptions).then(
-    () => ({ success: true as const, data: undefined }),
-    (error: Error) => ({
-      success: false as const,
-      error: error.message || 'Failed to send email',
-    })
-  );
-
-  return result;
-}
-
-async function submitToPropKeys(data: z.infer<typeof formSchema>) {
   try {
-    const baseUrl = 'https://propkeys04.realeasy.in/WebCreate.aspx';
-    const params = new URLSearchParams({
-      UID: 'fourqt',
-      PWD: 'wn9mxO76f34=',
-      Channel: 'FB',
-      Src: 'Facebook',
-      ISD: '91',
-      Mob: data.phone,
-      Email: data.email,
-      name: data.name,
-      City: '',
-      Location: '',
-      Project: 'AGF',
-    });
-    //
-    const response = await fetch(`${baseUrl}?${params.toString()}`, {
-      method: 'GET',
+    const transporter = nodemailer.createTransport({
+      // host: process.env.SMTP_HOST,
+      host: 'smtp.hostinger.com',
+      // port: parseInt(process.env.SMTP_PORT),
+      port: 587,
+      secure: false,
+      auth: {
+        user: process.env.HOSTINGER_EMAIL,
+        pass: process.env.HOSTINGER_PASSWORD,
+      },
+      // tls: {
+      //   ciphers: 'SSLv3',
+      //   rejectUnauthorized: false,
+      // },
+      tls: { ciphers: 'TLSv1.2' },
+      requireTLS: true,
+      debug: true,
     });
 
-    if (!response.ok) {
-      throw new Error(`PropKeys API error: ${response.statusText}`);
+    console.log('Attempting to connect with config:', {
+      host: process.env.SMTP_HOST,
+      port: process.env.SMTP_PORT,
+      secure: false,
+    });
+
+    try {
+      await transporter.verify();
+      console.log('SMTP connection verified successfully');
+    } catch (verifyError) {
+      console.error('SMTP verification failed:', verifyError);
+      throw verifyError;
     }
 
-    console.log(`${baseUrl}?${params.toString()}`);
+    const mailOptions = {
+      from: process.env.HOSTINGER_EMAIL,
+      to: process.env.HOSTINGER_EMAIL,
+      subject: 'New Contact Form Submission - Antalya Hills',
+      text: `
+        New contact form submission:
 
-    const result = await response.json();
-
-    if (!result.Status) {
-      throw new Error(result.Message || 'Failed to create lead');
-    }
-
-    return {
-      success: true as const,
-      leadId: result.Lead_Id,
+        Name: ${data.name}
+        Email: ${data.email}
+        Telephone: ${data.phone}
+        Buying Timeline: ${data.buyingTimeline.replace(/_/g, ' ')}
+      `,
+      html: `
+        <h2>New Contact Form Submission</h2>
+        <p><strong>Name:</strong> ${data.name}</p>
+        <p><strong>Email:</strong> ${data.email}</p>
+        <p><strong>Telephone:</strong> ${data.phone}</p>
+        <p><strong>Buying Timeline:</strong> ${data.buyingTimeline.replace(
+          /_/g,
+          ' '
+        )}</p>
+      `,
     };
+
+    await transporter.sendMail(mailOptions);
+    return { success: true, data: undefined };
   } catch (error) {
-    console.error('PropKeys API error:', error);
+    console.error('Email sending error:', error);
     return {
-      success: false as const,
-      error:
-        error instanceof Error ? error.message : 'Failed to submit to PropKeys',
+      success: false,
+      error: error instanceof Error ? error.message : 'Failed to send email',
     };
   }
 }
@@ -128,30 +118,19 @@ export const submitContact = actionClient
       return { success: false, error: 'Invalid input data' };
     }
 
-    // Submit to PropKeys first
-    const propKeysResult = await submitToPropKeys(parsedInput);
-    if (!propKeysResult.success) {
-      console.error('PropKeys submission failed:', propKeysResult.error);
-      return {
-        success: false,
-        error: 'Failed to submit lead. Please try again.',
-      };
-    }
-
-    // Then send email
     const emailResult = await sendEmail(parsedInput);
     if (!emailResult.success) {
       console.error('Email sending failed:', emailResult.error);
-      // Note: We don't return here since the lead was already created in PropKeys
+      return {
+        success: false,
+        error: 'Failed to send message. Please try again.',
+      };
     }
-
-    console.log(propKeysResult);
 
     return {
       success: true,
       data: {
-        leadId: propKeysResult.leadId,
-        emailSent: emailResult.success,
+        success: true,
       },
     };
   });
