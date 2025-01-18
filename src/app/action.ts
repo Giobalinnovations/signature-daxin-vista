@@ -79,7 +79,7 @@ async function sendEmail(
     const mailOptions = {
       from: process.env.HOSTINGER_EMAIL,
       to: process.env.HOSTINGER_EMAIL,
-      subject: 'New Contact Form Submission - Antalya Hills',
+      subject: 'New Contact Form Submission - Signature Daxin Vista',
       text: `
         New contact form submission:
 
@@ -129,8 +129,5 @@ export const submitContact = actionClient
 
     return {
       success: true,
-      data: {
-        success: true,
-      },
     };
   });
